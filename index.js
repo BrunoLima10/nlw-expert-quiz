@@ -1,7 +1,3 @@
-
-
-//alert("Este é um exemplo de alerta em JavaScript!");
-
 const perguntas = [
     {
         pergunta: "O que é JavaScript?",
@@ -98,6 +94,10 @@ const perguntas = [
 const quiz = document.querySelector('#quiz')
 const template = document.querySelector('template')
 
+const corretas = new Set()
+const totalDePerguntas = perguntas.length 
+const mostrarTotal = document.querySelector('#acertos span')
+mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas
 
 //loop ou laço de repetição
 for (const item of perguntas) {
@@ -107,6 +107,21 @@ for (const item of perguntas) {
     for(let resposta of item.respostas){
         const dt = quizItem.querySelector('dl dt').cloneNode(true)
         dt.querySelector('span').textContent = resposta
+        dt.querySelector('input').setAttribute('name', 'perguntas-' +perguntas.indexOf(item))
+        dt.querySelector('input').value = item.respostas.indexOf(resposta)
+        //para cada resposta, ele vai atualizar o valor pelo indice da resposta (0,1,2)
+
+        //verificando a interação na tela(eventos)
+        dt.querySelector('input').onchange = (event) => {
+            const estaCorreta = event.target.value == item.correta
+
+            corretas.delete(item)
+            if (estaCorreta) {
+                corretas.add(item)
+            }
+            
+            mostrarTotal.textContent = corretas.size + ' de ' + totalDePerguntas 
+        } 
 
         quizItem.querySelector('dl').appendChild(dt)
     }
